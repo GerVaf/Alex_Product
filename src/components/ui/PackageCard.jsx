@@ -5,6 +5,8 @@ import Modal from "./Modal";
 import { useManageStore } from "../../store/useManageStore";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
+import Package from "/package.jpg";
+import Include from "/pack.png";
 
 const PackageCard = ({ el }) => {
   const addItem = useManageStore((state) => state.addItem);
@@ -50,7 +52,7 @@ const PackageCard = ({ el }) => {
         <div className="w-1/2">
           <img
             className="rounded w-full h-full object-cover"
-            src="../../../public/package.jpg"
+            src={Package}
             alt={el.name}
           />
         </div>
@@ -68,7 +70,7 @@ const PackageCard = ({ el }) => {
             <div className="w-1/3">
               <img
                 className="w-full h-full object-cover"
-                src="../../../public/pack.png"
+                src={Include}
                 alt={item.name}
               />
             </div>

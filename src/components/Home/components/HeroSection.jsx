@@ -7,6 +7,8 @@ import {
 import { motion } from "framer-motion";
 import AnimatedDiv from "../../ui/AnimatedDiv";
 import NavBar from "../../ui/NavBar";
+import HeroImg from "/hero_section.jpg";
+import SemiHero from "/semi_hero1.jpg";
 
 export const containerVariants = {
   hidden: { opacity: 1 },
@@ -59,7 +61,7 @@ const HeroSection = () => {
         <div className="md:w-2/5 shadow-xl relative rounded-2xl overflow-hidden">
           <img
             className="object-cover w-full h-full"
-            src="../../../../public/hero_section.jpg"
+            src={HeroImg}
             alt="heroimg"
           />
           <div className=" w-full bg-third py-3 md:py-5 text-secondary px-5 md:px-10 flex justify-between items-center absolute bottom-2 md:bottom-5">
@@ -104,7 +106,7 @@ const HeroSection = () => {
           </div>
           <img
             className=" object-cover w-full h-full"
-            src="../../../../public/semi_hero1.jpg"
+            src={SemiHero}
             alt="heroimg"
           />
         </div>

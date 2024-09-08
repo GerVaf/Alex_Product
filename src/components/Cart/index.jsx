@@ -9,6 +9,8 @@ import { useCreateOrder, useGetOrderHistory } from "../../api/hooks/useQuery";
 import showToast from "../../utils/toast";
 import Loading from "../ui/Loading";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
+import EmptyCart from "/empty.png";
+import Pack from "/pack.png";
 
 const Cart = () => {
   const items = useManageStore((state) => state.items);
@@ -99,7 +101,7 @@ const Cart = () => {
                   <div className="h-[200px]">
                     <img
                       className="w-full h-full object-cover"
-                      src="../../../public/cart.jpg"
+                      src={EmptyCart}
                       alt={el.name}
                     />
                   </div>
@@ -143,7 +145,7 @@ const Cart = () => {
                               <div className="w-1/3">
                                 <img
                                   className="w-full h-full object-cover"
-                                  src="../../../public/pack.png"
+                                  src={Pack}
                                   alt={item.name}
                                 />
                               </div>

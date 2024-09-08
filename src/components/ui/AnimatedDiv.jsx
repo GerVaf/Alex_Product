@@ -1,6 +1,7 @@
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
+import SemiHero from "/semi_hero2.jpg";
 
 function AnimatedDiv() {
   const controls = useAnimation();
@@ -32,7 +33,7 @@ function AnimatedDiv() {
       </motion.div>
       <img
         className="object-cover w-full h-full"
-        src="../../../../public/semi_hero2.jpg"
+        src={SemiHero}
         alt="heroimg"
       />
     </div>

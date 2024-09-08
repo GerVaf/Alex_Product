@@ -7,7 +7,7 @@ import { formatDate } from "../../utils/fun";
 import Loading from "../ui/Loading";
 import { Link } from "react-router-dom";
 import { IconArrowRight } from "@tabler/icons-react";
-
+import EmptyHistory from "/history.png";
 const History = () => {
   const { data: orderHistory, isLoading, error } = useGetOrderHistory();
 
@@ -20,7 +20,7 @@ const History = () => {
       {orderHistory?.length === 0 ? (
         <div className="h-[70vh] flex flex-col item-center gap-10 justify-center">
           <div className=" self-center">
-            <img src="../../../public/history.png" alt="cart" />
+            <img src={EmptyHistory} alt="cart" />
           </div>
           <div className="w-[300px] self-center text-xl text-secondary flex flex-col gap-5">
             <p className="text-center">There is no Order.</p>

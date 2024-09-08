@@ -9,7 +9,7 @@ import { useCreateOrder, useGetOrderHistory } from "../../api/hooks/useQuery";
 import showToast from "../../utils/toast";
 import Loading from "../ui/Loading";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
-import EmptyCart from "/empty.png";
+import CartImg from "/cart.jpg";
 import Pack from "/pack.png";
 
 const Cart = () => {
@@ -101,7 +101,7 @@ const Cart = () => {
                   <div className="h-[200px]">
                     <img
                       className="w-full h-full object-cover"
-                      src={EmptyCart}
+                      src={CartImg}
                       alt={el.name}
                     />
                   </div>

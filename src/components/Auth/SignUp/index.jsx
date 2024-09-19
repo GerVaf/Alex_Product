@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSignup } from "../../../api/hooks/useAuth";
 import showToast from "../../../utils/toast";
 import Loading from "../../ui/Loading";
+import useUserStore from "../../../store/userStore";
+import { useGetOtp } from "../../../api/hooks/useQuery";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,24 +15,30 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [errors, setErrors] = useState({});
-
   const nav = useNavigate();
+  const setUserData = useUserStore((state) => state.setUserData);
 
-  const {
-    mutate: signup,
-    isLoading,
-    error: serverError,
-  } = useSignup({
-    onSuccess: () => {
-      showToast.success("Signup successful! Redirecting to login page...");
-      nav("/auth/login");
-    },
-    onError: (error) => {
-      showToast.error(
-        error.response?.data?.message || "Signup failed. Please try again."
-      );
-    },
-  });
+  // Destructure signup and getOtp hooks
+  const { mutate: signup, isLoading, error: serverError } = useSignup();
+  const { mutate: getOtp } = useGetOtp();
+
+  const handleSignupSuccess = async (data) => {
+    try {
+      // Call getOtp API
+      await getOtp({ email: formData.email });
+      showToast.success("Signup successful! Check your email for OTP");
+      setUserData(data, null);
+      nav("/auth/otp");
+    } catch {
+      showToast.error("Failed to get OTP. Please try again.");
+    }
+  };
+
+  const handleSignupError = (error) => {
+    showToast.error(
+      error.response?.data?.message || "Signup failed. Please try again."
+    );
+  };
 
   const validate = () => {
     const newErrors = {};
@@ -51,12 +59,18 @@ const Signup = () => {
       showToast.error("Please fill out all fields correctly.");
       return;
     }
-    signup({
-      username: formData.username,
-      email: formData.email,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-    });
+    signup(
+      {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      },
+      {
+        onSuccess: handleSignupSuccess,
+        onError: handleSignupError,
+      }
+    );
   };
 
   const handleChange = (e) => {
@@ -66,7 +80,6 @@ const Signup = () => {
 
   return (
     <>
-      {/* Form for signup */}
       <form
         className="w-full main-font h-[100vh] flex flex-col gap-5 items-center py-10 p-5 "
         onSubmit={handleSubmit}

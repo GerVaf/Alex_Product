@@ -11,6 +11,8 @@ import Loading from "../ui/Loading";
 import { IconMinus, IconPlus } from "@tabler/icons-react";
 import CartImg from "/cart.jpg";
 import Pack from "/pack.png";
+import { splitImageUrls } from "../ui/PackageCard";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const items = useManageStore((state) => state.items);
@@ -43,7 +45,13 @@ const Cart = () => {
   const handlePlaceOrder = () => {
     if (lastOrderProgress === "pending" || lastOrderProgress === "accepted") {
       showToast.info(
-        "You have a pending or accepted order. Please wait before placing a new one."
+        <div>
+          You have a pending or accepted order. Check your{" "}
+          <Link to={'/history'} className="text-red-600" >
+            order history
+          </Link>
+          . Please wait before placing a new one.
+        </div>
       );
     } else {
       setIsModalOpen(true);
@@ -101,7 +109,7 @@ const Cart = () => {
                   <div className="h-[200px]">
                     <img
                       className="w-full h-full object-cover"
-                      src={CartImg}
+                      src={splitImageUrls(el.image)[0]}
                       alt={el.name}
                     />
                   </div>

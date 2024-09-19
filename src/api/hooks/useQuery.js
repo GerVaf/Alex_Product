@@ -25,6 +25,19 @@ export const useCreateOrder = () => {
     // },
   });
 };
+
+export const useGetOtp = () => {
+  return useMutation({
+    mutationFn: (email) => createData("users/generate-otp", email),
+  });
+};
+
+export const useVertifyOtp = () => {
+  return useMutation({
+    mutationFn: (data) => createData("users/verify-otp", data),
+  });
+};
+
 export const useGetOrderHistory = () => {
   return useQuery({
     queryKey: ["orders"],

@@ -10,9 +10,9 @@ import Loading from "../../ui/Loading";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
-  const setUserData = useUserStore((state) => state.setUserData); 
+  const setUserData = useUserStore((state) => state.setUserData);
 
-  const nav = useNavigate()
+  const nav = useNavigate();
   const {
     mutate: login,
     isLoading,
@@ -20,7 +20,7 @@ const Login = () => {
   } = useLogin({
     onSuccess: (data) => {
       // console.log(data);
-      setUserData(data.data, data.data); 
+      setUserData(data.data, data.data);
       showToast.success("Login successful! Redirecting...");
       nav("/");
     },

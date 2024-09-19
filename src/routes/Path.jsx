@@ -14,6 +14,7 @@ import Shop from "../components/Shop";
 import History from "../components/History";
 import useUserStore from "../store/userStore";
 import { useEffect, useState } from "react";
+import OtpCode from "../components/Auth/Otp";
 
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
@@ -71,6 +72,11 @@ const Path = () => {
     {
       path: "/auth/signup",
       element: <Signup />,
+      icon: <IconLogin />,
+    },
+    {
+      path: "/auth/otp",
+      element: <OtpCode />,
       icon: <IconLogin />,
     },
   ];

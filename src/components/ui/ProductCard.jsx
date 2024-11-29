@@ -1,93 +1,65 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
-import { IconPlus, IconMinus } from "@tabler/icons-react";
-import { useManageStore } from "../../store/useManageStore";
-import Modal from "./Modal";
-import { useNavigate } from "react-router-dom";
-import useUserStore from "../../store/userStore";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 const ProductCard = ({ product }) => {
-  const addItem = useManageStore((state) => state.addItem);
-  const removeItem = useManageStore((state) => state.removeItem);
-  const cartItem = useManageStore((state) => state.items);
-  const isAuthenticated = useUserStore((state) => state.isAuthenticated);
-  const nav = useNavigate();
-  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const intervalRef = useRef(null);
 
-  // Check if product is in the cart
-  const isProductInCart = cartItem?.some(
-    (cartProduct) => cartProduct._id === product._id
-  );
-
-  const handleButtonClick = () => {
-    if (isAuthenticated()) {
-      if (isProductInCart) {
-        removeItem(product._id);
-      } else {
-        addItem(product);
-      }
-    } else {
-      setShowLoginModal(true);
-    }
+  const getRandomDuration = () => {
+    return Math.floor(Math.random() * 2000) + 2000;
   };
 
-  // Handle login redirect
-  const handleLoginRedirect = () => {
-    setShowLoginModal(false);
-    nav("/auth/login");
-  };
+  useEffect(() => {
+    const changeImage = () => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === product.images.length - 1 ? 0 : prevIndex + 1
+      );
+    };
+
+    const setNewInterval = () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = setInterval(() => {
+        changeImage();
+        setNewInterval();
+      }, getRandomDuration());
+    };
+
+    setNewInterval();
+
+    return () => clearInterval(intervalRef.current);
+  }, [product.images.length]);
 
   return (
-    <div
+    <Link
+      to={`/product/${product._id}`}
       key={product._id}
-      className="border gap-2 transition duration-150 text-secondary shadow-lg w-full py-5 px-3 md:px-10 rounded-2xl h-[200px] bg-gradient-to-tr to-indigo-100 from-violet-100 flex justify-around items-center"
+      className="relative h-[200px] col-span-1"
     >
-      {/* card right side */}
-      <div className="w-1/2 flex flex-col justify-between gap-3 items-start">
-        <div className="flex flex-col gap-5">
-          <div className="flex flex-col">
-            <h1 className="text-2xl">{product.name}</h1>
-            <span className="text-sm text-gray-500">{product.description}</span>
-          </div>
-          <span className="text-2xl">$ {product.price}</span>
-        </div>
-        <button
-          onClick={handleButtonClick}
-          className={`${
-            isProductInCart
-              ? "bg-red-600"
-              : "bg-gradient-to-r from-violet-600 to-indigo-600"
-          } shadow-lg rounded-xl text-white gap-3 p-2 flex px-5 items-center`}
-        >
-          {isProductInCart ? (
-            <>
-              <IconMinus size={15} /> Cancel
-            </>
-          ) : (
-            <>
-              <IconPlus size={15} /> Order
-            </>
-          )}
-        </button>
+      <div className="rounded border w-full h-[200px] overflow-hidden shadow-xl">
+        <AnimatePresence>
+          <motion.img
+            key={product.images[currentImageIndex]}
+            src={product.images[currentImageIndex]}
+            alt={product.images[currentImageIndex]}
+            className="object-cover w-full h-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+          />
+        </AnimatePresence>
       </div>
-      <div className="rounded-2xl w-1/2 h-full overflow-hidden shadow-xl">
-        <img
-          className="object-cover w-full h-full"
-          src={product.image}
-          alt={product.name}
-        />
+      {/* card bottom side */}
+      <div className="rounded-t-md flex justify-center items-center text-center text-[10px] rounded-b bg-black/20 backdrop-blur-sm h-[40px] absolute bottom-0 w-full">
+        <p className="line-clamp-2">
+          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ab
+          consequuntur quaerat aut nobis est veniam atque voluptatibus, quisquam
+          explicabo id numquam vero?
+        </p>
       </div>
-
-      {/* Reusable Modal Component */}
-      <Modal isOpen={showLoginModal} onClose={() => setShowLoginModal(false)}>
-        <p className="text-lg">You need to log in to perform this action.</p>
-        <div>
-          <button onClick={handleLoginRedirect} className="gradient-btn">
-            Go to Login
-          </button>
-        </div>
-      </Modal>
-    </div>
+    </Link>
   );
 };
 

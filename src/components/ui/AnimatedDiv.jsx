@@ -6,8 +6,8 @@ import SemiHero from "/semi_hero2.jpg";
 function AnimatedDiv() {
   const controls = useAnimation();
   const [ref, inView] = useInView({
-    triggerOnce: false, // The animation only triggers once
-    threshold: 0.5, // Trigger when 50% of the div is in view
+    triggerOnce: false, 
+    threshold: 0.5, 
   });
 
   useEffect(() => {

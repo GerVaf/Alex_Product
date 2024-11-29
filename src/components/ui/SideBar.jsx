@@ -1,163 +1,63 @@
-import { useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
-import { IconX } from "@tabler/icons-react";
-import { toast } from "react-hot-toast";
-import useSidebarStore from "../../store/useSidebarStore";
-import { Link } from "react-router-dom";
-import useUserStore from "../../store/userStore";
+import { Link, useLocation } from "react-router-dom";
+import {
+  IconClock12,
+  IconHome,
+  IconPackage,
+  IconShoppingBag,
+} from "@tabler/icons-react";
 
-const sidebarVariants = {
-  hidden: {
-    x: "-100%",
-    opacity: 0,
-    transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
-    },
-  },
-  visible: {
-    x: "0%",
-    opacity: 1,
-    transition: {
-      x: { stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
-    },
-  },
-  exit: {
-    x: "-100%",
-    opacity: 0,
-    transition: {
-      x: { type: "spring", stiffness: 300, damping: 30 },
-      opacity: { duration: 0.2 },
-    },
-  },
-};
+const SideBar = () => {
+  const location = useLocation();
 
-function Sidebar() {
-  const sidebarRef = useRef(null);
-  const { isSidebarVisible, closeSidebar } = useSidebarStore();
+  const menuData = [
+    { path: "/", name: "Home", icon: <IconHome size={18} /> },
+    { path: "/shop", name: "Shop", icon: <IconPackage size={18} /> },
+    { path: "/history", name: "History", icon: <IconClock12 size={18} /> },
+    { path: "/cart", name: "Cart", icon: <IconShoppingBag size={18} /> },
+  ];
 
-  const { userData, clearUserData } = useUserStore((state) => ({
-    userData: state.userData,
-    clearUserData: state.clearUserData,
-  }));
+  const hiddenPaths = [
+    "/auth/signup",
+    "/auth/login",
+    "/auth/otp",
+    "/blog",
+    "/blog/:id",
+  ];
 
-  // console.log(userData);
-  
-  const handleClickOutside = useCallback(
-    (event) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-        closeSidebar();
-      }
-    },
-    [closeSidebar]
-  );
-
-  const handleScroll = useCallback(() => {
-    closeSidebar();
-  }, [closeSidebar]);
-
-  useEffect(() => {
-    if (isSidebarVisible) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("touchstart", handleClickOutside);
-      window.addEventListener("scroll", handleScroll);
-
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-        document.removeEventListener("touchstart", handleClickOutside);
-        window.removeEventListener("scroll", handleScroll);
-      };
+  const isHidden = hiddenPaths.some((path) => {
+    if (path.includes("/:id")) {
+      const basePath = path.split("/:id")[0];
+      return location.pathname.startsWith(basePath);
     }
-  }, [isSidebarVisible, handleClickOutside, handleScroll]);
-
-  const handleLogout = () => {
-    closeSidebar();
-    clearUserData();
-    toast.success("Logged out successfully!");
-  };
+    return location.pathname === path;
+  });
 
   return (
-    <motion.div
-      ref={sidebarRef}
-      className="fixed main-font top-0 left-0 w-64 h-full bg-gray-800 text-white z-50 flex flex-col"
-      initial="hidden"
-      animate={isSidebarVisible ? "visible" : "hidden"}
-      exit="exit"
-      variants={sidebarVariants}
+    <div
+      className={`z-50 sticky bottom-5 flex items-center justify-center ${
+        isHidden ? "hidden" : ""
+      }`}
     >
-      <div className="p-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">My Sidebar</h1>
-        <button onClick={closeSidebar}>
-          <IconX className="text-white w-6 h-6" />
-        </button>
+      <div className="bg-[#8EACCD]/40 backdrop-blur-md px-5 py-2 flex justify-around w-[85%] rounded-lg">
+        {menuData.map(({ path, name, icon }) => {
+          const isActive = location.pathname === path;
+          return (
+            <Link to={path} key={name}>
+              <div
+                className={`p-2 px-5 text-white rounded-lg shadow-lg shadow-zinc-500/50 transition-transform duration-300 ${
+                  isActive
+                    ? "bg-gradient-to-r from-[#7C93C3] to-[#55679C] transform translate-y-[-20px]"
+                    : "bg-gradient-to-r from-[#7C93C3] to-[#55679C]"
+                }`}
+              >
+                {icon}
+              </div>
+            </Link>
+          );
+        })}
       </div>
-      <nav className="mt-4 flex-grow">
-        <div className="flex flex-col">
-          <Link
-            to="/"
-            className="p-4 border-y text-xl font-bold hover:bg-gray-700"
-            onClick={closeSidebar}
-          >
-            Home
-          </Link>
-          <Link
-            to="/history"
-            className="p-4 border-y text-xl font-bold hover:bg-gray-700"
-            onClick={closeSidebar}
-          >
-            Order Histroy
-          </Link>
-          <Link
-            to="/cart"
-            className="p-4 border-y text-xl font-bold hover:bg-gray-700"
-            onClick={closeSidebar}
-          >
-            Your Cart
-          </Link>
-          <Link
-            to="/shop"
-            className="p-4 border-y text-xl font-bold hover:bg-gray-700"
-            onClick={closeSidebar}
-          >
-            Menu
-          </Link>
-          <Link
-            to="/contact"
-            className="p-4 border-y text-xl font-bold hover:bg-gray-700"
-            onClick={closeSidebar}
-          >
-            Contact
-          </Link>
-        </div>
-      </nav>
-      {!userData && (
-        <div className="p-4 bg-gray-700 text-center">
-          <Link to="/auth/login" onClick={closeSidebar}>
-            <button className="gradient-btn rounded-full">Login</button>
-          </Link>
-        </div>
-      )}
-      <motion.div
-        className="p-4 text-center bg-gray-700"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { delay: 0.3 } }}
-      >
-        {userData && (
-          <div className="bg-gray-700 text-start flex flex-col gap-2">
-            <p className="font-bold">{userData?.username}</p>
-            <p className="text-sm">{userData?.email}</p>
-            <button
-              onClick={handleLogout}
-              className=" mt-4 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-full"
-            >
-              Logout
-            </button>
-          </div>
-        )}
-      </motion.div>
-    </motion.div>
+    </div>
   );
-}
+};
 
-export default Sidebar;
+export default SideBar;

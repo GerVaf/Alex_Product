@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
-import { IconMenu } from "@tabler/icons-react";
+import { IconArrowRight, IconMenu } from "@tabler/icons-react";
 import useSidebarStore from "../../store/useSidebarStore";
+import { Link } from "react-router-dom";
 
 const NavBar = ({ padding }) => {
   const { isSidebarVisible, toggleSidebar } = useSidebarStore();
@@ -10,7 +11,9 @@ const NavBar = ({ padding }) => {
       <button onClick={() => toggleSidebar(!isSidebarVisible)}>
         <IconMenu />
       </button>
-      <button className="primary-btn">Contact</button>
+      <Link to={"/blog"} className="primary-btn gap-5 ">
+        <p>Read Blog</p> <IconArrowRight size={20} />
+      </Link>
     </div>
   );
 };

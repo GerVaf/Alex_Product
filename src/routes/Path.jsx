@@ -15,6 +15,9 @@ import History from "../components/History";
 import useUserStore from "../store/userStore";
 import { useEffect, useState } from "react";
 import OtpCode from "../components/Auth/Otp";
+import Blog from "../components/Blog";
+import ReadBlog from "../components/Blog/components/ReadBlog";
+import Product from "../components/Product";
 
 const ProtectedRoute = ({ element }) => {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
@@ -28,7 +31,7 @@ const PublicRoute = ({ element }) => {
 const Path = () => {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const [isAuth, setIsAuth] = useState(isAuthenticated());
-//  console.log(isAuthenticated())
+  //  console.log(isAuthenticated())
   useEffect(() => {
     const unsubscribe = useUserStore.subscribe(
       (state) => state.userToken,
@@ -46,6 +49,21 @@ const Path = () => {
     {
       path: "/shop",
       element: <Shop />,
+      icon: <IconHome />,
+    },
+    {
+      path: "/blog",
+      element: <Blog />,
+      icon: <IconHome />,
+    },
+    {
+      path: "/blog/:id",
+      element: <ReadBlog />,
+      icon: <IconHome />,
+    },
+    {
+      path: "/product/:id",
+      element: <Product />,
       icon: <IconHome />,
     },
   ];

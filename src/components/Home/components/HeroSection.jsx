@@ -1,117 +1,147 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-refresh/only-export-components */
-import {
-  IconArrowRight,
-  IconArrowUpRight,
-  IconPlayerPlay,
-} from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import AnimatedDiv from "../../ui/AnimatedDiv";
-import NavBar from "../../ui/NavBar";
-import HeroImg from "/hero_section.jpg";
-import SemiHero from "/semi_hero1.jpg";
-
 export const containerVariants = {
-  hidden: { opacity: 1 },
+  hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.4,
+      staggerChildren: 0.5,
     },
   },
 };
 
 const HeroSection = () => {
-  const spanVariants = {
-    hidden: { opacity: 0, x: -50 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: "easeOut" },
+  // ajust with the WIDTH OF top bar animation AND DECORATION WIDTH
+  const [data, setData] = useState([
+    {
+      id: 1,
+      header: "CRASHING HARD",
+      title: "BLANKE & CASEY COOK",
+      image:
+        "https://i.pinimg.com/736x/d6/79/ee/d679eed1dbc06a64a759b9d2a814b35b.jpg",
+      active: true,
     },
-  };
+    {
+      id: 2,
+      header: "BLACK FRIDAY",
+      title: "GET EARLY ACCESS",
+      image:
+        "https://i.pinimg.com/564x/41/5d/9c/415d9cca091edb7d2e8509c9710965c3.jpg",
+      active: false,
+    },
+    {
+      id: 3,
+      header: "FALL APART",
+      title: "HARD & CRASH",
+      image:
+        "https://i.pinimg.com/736x/3e/30/02/3e30023f03c0705505556b0ad226556f.jpg",
+      active: false,
+    },
+    {
+      id: 4,
+      header: "BRICK VEX DUCK",
+      title: "BURN IN HELL",
+      image:
+        "https://i.pinimg.com/736x/50/25/85/502585a7a5d60ca44c825e4de035cbfc.jpg",
+      active: false,
+    },
+  ]);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % data.length);
+    }, 4000);
+
+    const updatedData = data.map((el, index) => ({
+      ...el,
+      active: index === activeIndex,
+    }));
+
+    setData(updatedData);
+
+    return () => clearInterval(interval);
+  }, [activeIndex]);
 
   return (
-    <div className="flex flex-col w-full md:p-10 p-5 gap-10">
-      <div className="md:h-[60vh] gap-5 md:w-full flex md:flex-row flex-col">
-        {/* left section top  */}
-        <div className="md:w-3/5 flex flex-col gap-5 justify-around md:px-5">
-          <NavBar />
+    <div className=" overflow-hidden relative ">
+      {/* top bar active animation */}
+      <div className="flex absolute mt-5 flex-row z-30 w-full justify-center ">
+        <div className="grid grid-cols-2 gap-3 lg:gap-16 w-[80%]">
+          {data.map((el) => (
+            <div
+              key={el.id}
+              className="flex flex-col gap-2 lg:gap-5 col-span-1"
+            >
+              <div className="w-full h-1 lg:h-3 border relative overflow-hidden">
+                {/* animation div */}
+                <motion.div
+                  className={`w-full h-full bg-white absolute `}
+                  initial={{ translateX: el.active ? 0 : -350 }}
+                  animate={{ translateX: el.active ? 0 : -350 }}
+                  whileHover={{ translateX: 0 }}
+                  transition={{ duration: 1.5 }}
+                ></motion.div>
+              </div>
+              <div className="text-white text-[10px] lg:text-sm">
+                <p>{el.title}</p>
+                <p>{el.header}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <motion.div
+        className="w-[400vw] h-[65vh] flex relative"
+        animate={{ right: `${activeIndex * 100}vw` }}
+        transition={{ duration: 0.5 }}
+      >
+        {data.map((el) => (
           <motion.div
-            className="hero-font text-secondary text-[50px] md:text-[100px] w-full flex flex-wrap"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
+            key={el.id}
+            className="w-[100vw] h-full relative"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            <motion.span variants={spanVariants}>Discover the </motion.span>
-            <motion.span variants={spanVariants}>Ultimate Sushi </motion.span>
-            <motion.span variants={spanVariants}>Experience!</motion.span>
+            {/* background decoration  */}
+            <div className="">
+              <img
+                className="w-full h-full object-cover z-0 absolute"
+                src={el.image}
+                alt=""
+              />
+              <div className="w-full h-full img-decoration z-10 absolute"></div>
+              <div className="w-full h-full z-20 absolute bg-black/10 backdrop-blur-sm"></div>
+            </div>
+            {/* inner data  */}
+            <motion.div
+              initial={{ opacity: 0, justifyContent: "flex-end" }}
+              animate={{
+                opacity: el.active ? 1 : 0,
+                justifyContent: el.active ? "center" : "flex-end",
+              }}
+              transition={{ duration: 1.5 }}
+              className="w-full h-full mt-14 relative flex items-center  z-50"
+            >
+              <div className=" lg:w-[60%] lg:h-[50%] w-[85%] h-[55%]  flex lg:flex-row flex-col ">
+                {/* left image  */}
+                <div className="lg:w-2/4 w-full h-full relative">
+                  <img
+                    className=" h-full w-full object-cover absolute z-10"
+                    src={el.image}
+                    alt=""
+                  />
+                  <div className="h-full w-full inner-img-deco absolute z-20"></div>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
-          <div className="flex md:justify-end md:gap-10 gap-5">
-            <button className="gradient-btn flex items-center gap-2 md:gap-5">
-              <IconArrowRight size={20} />
-              Check menu
-            </button>
-            <button className="gradient-btn flex items-center gap-2 md:gap-5">
-              <IconPlayerPlay size={20} />
-              How to order
-            </button>
-          </div>
-        </div>
-        {/* right section top  */}
-        <div className="md:w-2/5 shadow-xl relative rounded-2xl overflow-hidden">
-          <img
-            className="object-cover w-full h-full"
-            src={HeroImg}
-            alt="heroimg"
-          />
-          <div className=" w-full bg-third py-3 md:py-5 text-secondary px-5 md:px-10 flex justify-between items-center absolute bottom-2 md:bottom-5">
-            <span className=" text-sm md:text-lg">
-              Fresh ingredients sourced locally <br /> and prepared mindfully
-            </span>
-            <div className="p-3 relative transition duration-150 flex items-center justify-center rounded-full bg-white text-black">
-              <motion.div
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  repeat: Infinity,
-                  duration: 8,
-                  ease: "linear",
-                }}
-                className=" absolute rounded-full w-8 h-8 border-dashed border-2 border-black"
-              ></motion.div>
-              <IconArrowUpRight />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="md:h-[40vh] grid grid-cols-2 md:grid-cols-6 gap-5">
-        <div className="p-5 col-span-2 text-secondary flex flex-col justify-around gap-5">
-          <span className="text-2xl">
-            Purest Sushi Experience <br />
-            Focusing on Premium Quality <br />
-            Ingredients
-          </span>
-          <div className="flex justify-start gap-10">
-            <button className="secondary-btn">Menu</button>
-            <button className="secondary-btn">Reservation</button>
-          </div>
-        </div>
-        <div className=" overflow-hidden relative shadow-lg rounded-lg col-span-2 w-full">
-          <div className=" absolute right-5 bottom-5 text-black">
-            <div className="text-sm items-center md:text-base flex cursor-pointer hover:bg-secondary hover:text-white px-5 py-2 transition duration-150 rounded-full bg-white text-black">
-              <IconArrowUpRight />
-              Our Premium Taste
-            </div>
-          </div>
-          <img
-            className=" object-cover w-full h-full"
-            src={SemiHero}
-            alt="heroimg"
-          />
-        </div>
-        <AnimatedDiv />
-      </div>
+        ))}
+      </motion.div>
     </div>
   );
 };

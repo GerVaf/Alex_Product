@@ -23,11 +23,13 @@ export const getDataNoPagination = async (path) => {
   }
 };
 
-export const getData = async (path, page = 1, limit = 5) => {
+export const getData = async (path, page = 1, limit = 5, qualityType = "") => {
   try {
     const response = await axiosInstance.get(`/${path}`, {
-      params: { page, limit },
+      params: { qualityType, page, limit },
     });
+    // console.log("Params",path,page,limit,qualityType)
+    // console.log("response", response);
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);

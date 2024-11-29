@@ -1,9 +1,9 @@
 import { useGetPackage } from "../../../api/hooks/useQuery";
 import PackageCard from "../../ui/PackageCard";
 
-const PackageItem = () => {
+const LimitedItem = () => {
   const { data: packages, error, isLoading } = useGetPackage();
-  // console.log(packages?.data);
+  console.log(packages?.data);
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -18,4 +18,4 @@ const PackageItem = () => {
   );
 };
 
-export default PackageItem;
+export default LimitedItem;

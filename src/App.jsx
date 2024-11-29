@@ -11,8 +11,8 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <Toaster position="top-right" reverseOrder={false} />
       <CartIcon />
-      <Sidebar />
       <Path />
+      {/* <Sidebar /> */}
     </QueryClientProvider>
   );
 };

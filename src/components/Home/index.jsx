@@ -3,7 +3,7 @@ import MenuSection from "./components/MenuSection";
 
 const Home = () => {
   return (
-    <div className="main-font">
+    <div className="main-font overflow-hidden">
       <HeroSection />
       <MenuSection />
     </div>
